@@ -43,7 +43,7 @@ namespace LojaVirtual.Client
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome")] Categoria categoria)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao")] Categoria categoria)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace LojaVirtual.Client
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome")] Categoria categoria)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao")] Categoria categoria)
         {
             if (id != categoria.Id)
             {
