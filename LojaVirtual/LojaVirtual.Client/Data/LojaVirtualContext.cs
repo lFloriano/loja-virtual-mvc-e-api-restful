@@ -10,6 +10,7 @@ namespace LojaVirtual.Client.Data
         public LojaVirtualContext(DbContextOptions<LojaVirtualContext> options)
             : base(options)
         {
+            Initialize();
         }
 
         public DbSet<Categoria> Categoria { get; set; }
@@ -20,24 +21,32 @@ namespace LojaVirtual.Client.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            AdicionarCategoriasIniciais(modelBuilder);
-            AdicionarVendedorInical(modelBuilder);
             MapearRelacionamentos(modelBuilder);
         }
 
-        private void AdicionarCategoriasIniciais(ModelBuilder modelBuilder)
+        private void Initialize()
         {
-            modelBuilder.Entity<Categoria>().HasData(
-                new Categoria { Id = 1, Nome = "Eletrônicos", Descricao = "Equipamentos Eletrônicos" },
-                new Categoria { Id = 2, Nome = "Roupas", Descricao = "Roupas masculinas e femininas" },
-                new Categoria { Id = 3, Nome = "Livros", Descricao = "Livros físicos e e-books" }
+            if (Database.EnsureCreated())
+            {
+                AdicionarCategoriasIniciais();
+                AdicionarVendedorInical();
+                SaveChanges();
+            }
+        }
+
+        private void AdicionarCategoriasIniciais()
+        {
+            Categoria.AddRange(
+                new Categoria { Nome = "Eletrônicos", Descricao = "Equipamentos Eletrônicos" },
+                new Categoria { Nome = "Roupas", Descricao = "Roupas masculinas e femininas" },
+                new Categoria { Nome = "Livros", Descricao = "Livros físicos e e-books" }
             );
         }
 
-        private void AdicionarVendedorInical(ModelBuilder modelBuilder)
+        private void AdicionarVendedorInical()
         {
-            modelBuilder.Entity<Vendedor>().HasData(
-                new Vendedor { Id = 1, Nome = "Vendedor 1", Email = "Vendedor@lojavirtual.com", DataCadastro = DateTime.Now }
+            Vendedores.Add(
+                new Vendedor { Nome = "Vendedor 1", Email = "Vendedor@lojavirtual.com", DataCadastro = DateTime.Now }
             );
         }
 
