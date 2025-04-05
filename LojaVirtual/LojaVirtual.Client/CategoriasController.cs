@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LojaVirtual.Client
 {
+    [Route("categorias")]
     public class CategoriasController : Controller
     {
         private readonly LojaVirtualContext _context;
@@ -14,11 +15,13 @@ namespace LojaVirtual.Client
             _context = context;
         }
 
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categoria.ToListAsync());
         }
 
+        [HttpGet("detalhes/{id:int}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,12 +39,13 @@ namespace LojaVirtual.Client
             return View(categoria);
         }
 
+        [HttpGet("novo")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("novo")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Descricao")] Categoria categoria)
         {
@@ -55,6 +59,7 @@ namespace LojaVirtual.Client
             return View(categoria);
         }
 
+        [HttpGet("editar/{id:int}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,7 +77,7 @@ namespace LojaVirtual.Client
             return View(categoria);
         }
 
-        [HttpPost]
+        [HttpPost("editar/{id:int}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao")] Categoria categoria)
         {
@@ -104,6 +109,7 @@ namespace LojaVirtual.Client
             return View(categoria);
         }
 
+        [HttpGet("excluir/{id:int}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -120,8 +126,8 @@ namespace LojaVirtual.Client
 
             return View(categoria);
         }
-
-        [HttpPost, ActionName("Delete")]
+        
+        [HttpPost("excluir/{id:int}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
