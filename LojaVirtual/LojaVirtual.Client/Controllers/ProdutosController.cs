@@ -1,5 +1,5 @@
-﻿using LojaVirtual.Client.Data;
-using LojaVirtual.Core.Application.Models;
+﻿using LojaVirtual.Core.Application.Models;
+using LojaVirtual.Core.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;

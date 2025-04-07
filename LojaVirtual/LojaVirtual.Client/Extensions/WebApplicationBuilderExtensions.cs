@@ -1,4 +1,5 @@
 using LojaVirtual.Client.Data;
+using LojaVirtual.Core.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

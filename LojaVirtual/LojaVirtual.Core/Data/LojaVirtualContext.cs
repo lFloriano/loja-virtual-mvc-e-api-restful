@@ -1,7 +1,7 @@
 ﻿using LojaVirtual.Core.Application.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LojaVirtual.Client.Data
+namespace LojaVirtual.Core.Data
 {
     public class LojaVirtualContext : DbContext
     {
