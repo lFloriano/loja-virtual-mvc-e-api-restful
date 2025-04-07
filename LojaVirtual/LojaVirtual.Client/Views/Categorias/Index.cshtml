@@ -7,7 +7,10 @@
 <h1>Categorias</h1>
 
 <p>
-    <a asp-action="Create">Adicionar uma categoria</a>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i>
+        Adicionar uma categoria
+    </a>
 </p>
 <table class="table table-bordered">
     <thead>
@@ -32,9 +35,15 @@
                     @Html.DisplayFor(modelItem => item.Descricao)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+                    <a asp-action="Edit" class="btn btn-primary btn-sm" asp-route-id="@item.Id" title="Editar">
+                        <i class="bi bi-pen"></i>
+                    </a>
+                    <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.Id" title="Detalhes">
+                        <i class="bi bi-search"></i>
+                    </a>
+                    <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id" title="Excluir">
+                        <i class="bi bi-trash"></i>
+                    </a>
                 </td>
             </tr>
         }
