@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 
 namespace LojaVirtual.Client.Extensions
@@ -22,21 +21,19 @@ namespace LojaVirtual.Client.Extensions
             app.UseAuthorization();
 
             app.MapStaticAssets();
-            
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Produtos}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
-            // Define a cultura pt-BR
             var defaultCulture = new CultureInfo("pt-BR");
             var localizationOptions = new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture(defaultCulture),
-                SupportedCultures = new List<CultureInfo> { defaultCulture },
-                SupportedUICultures = new List<CultureInfo> { defaultCulture }
+                DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(defaultCulture),
+                SupportedCultures = new[] { defaultCulture },
+                SupportedUICultures = new[] { defaultCulture }
             };
-
             app.UseRequestLocalization(localizationOptions);
 
             //app.MapRazorPages()

@@ -31,7 +31,6 @@ namespace LojaVirtual.Client.Models.Produtos
 
         [Display(Name = "Preço")]
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "O campo {0} deve ser maior que zero.")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Preco { get; set; }
 

@@ -35,14 +35,17 @@
                     @Html.DisplayFor(modelItem => item.Descricao)
                 </td>
                 <td>
-                    <a asp-action="Edit" class="btn btn-primary btn-sm" asp-route-id="@item.Id" title="Editar">
+                    <a asp-action="Edit" class="btn btn-primary btn-sm" asp-route-id="@item.Id">
                         <i class="bi bi-pen"></i>
+                        Editar
                     </a>
-                    <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.Id" title="Detalhes">
+                    <a asp-action="Details" class="btn btn-primary btn-sm" asp-route-id="@item.Id">
                         <i class="bi bi-search"></i>
+                        Detalhes
                     </a>
-                    <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id" title="Excluir">
+                    <a asp-action="Delete" class="btn btn-danger btn-sm" asp-route-id="@item.Id">
                         <i class="bi bi-trash"></i>
+                        Excluir
                     </a>
                 </td>
             </tr>
