@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LojaVirtual.Client.Models.Vendedores
+namespace LojaVirtual.Core.Application.Models
 {
     public class Vendedor
     {

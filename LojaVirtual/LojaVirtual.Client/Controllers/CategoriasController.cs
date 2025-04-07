@@ -1,5 +1,5 @@
 ﻿using LojaVirtual.Client.Data;
-using LojaVirtual.Client.Models.Categorias;
+using LojaVirtual.Core.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -126,7 +126,7 @@ namespace LojaVirtual.Client.Controllers
 
             return View(categoria);
         }
-        
+
         [HttpPost("excluir/{id:int}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

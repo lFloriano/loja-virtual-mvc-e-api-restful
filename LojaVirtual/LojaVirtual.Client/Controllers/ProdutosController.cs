@@ -1,5 +1,5 @@
 ﻿using LojaVirtual.Client.Data;
-using LojaVirtual.Client.Models.Produtos;
+using LojaVirtual.Core.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +51,7 @@ namespace LojaVirtual.Client.Controllers
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao");
-            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Email");
+            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome");
 
             return View();
         }
@@ -63,7 +63,7 @@ namespace LojaVirtual.Client.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao", produto.CategoriaId);
-                ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Email", produto.VendedorId);
+                ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
 
                 return View(produto);
             }
@@ -89,7 +89,7 @@ namespace LojaVirtual.Client.Controllers
             }
 
             ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao", produto.CategoriaId);
-            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Email", produto.VendedorId);
+            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
 
             return View(produto);
         }
@@ -106,7 +106,7 @@ namespace LojaVirtual.Client.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao", produto.CategoriaId);
-                ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Email", produto.VendedorId);
+                ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
                 return View(produto);
             }
 

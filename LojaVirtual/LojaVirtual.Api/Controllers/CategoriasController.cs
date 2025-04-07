@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LojaVirtual.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/categorias")]
     public class CategoriasController : ControllerBase
     {
         List<Categoria> categorias = new List<Categoria>();

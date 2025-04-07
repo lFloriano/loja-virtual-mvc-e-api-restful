@@ -1,9 +1,7 @@
-﻿using LojaVirtual.Client.Models.Categorias;
-using LojaVirtual.Client.Models.Vendedores;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LojaVirtual.Client.Models.Produtos
+namespace LojaVirtual.Core.Application.Models
 {
     public class Produto
     {

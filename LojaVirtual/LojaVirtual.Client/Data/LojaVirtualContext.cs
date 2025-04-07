@@ -1,6 +1,4 @@
-﻿using LojaVirtual.Client.Models.Categorias;
-using LojaVirtual.Client.Models.Produtos;
-using LojaVirtual.Client.Models.Vendedores;
+﻿using LojaVirtual.Core.Application.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LojaVirtual.Client.Data
