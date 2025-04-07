@@ -3,7 +3,7 @@ using LojaVirtual.Client.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace LojaVirtual.Client
+namespace LojaVirtual.Client.Controllers
 {
     [Route("categorias")]
     public class CategoriasController : Controller

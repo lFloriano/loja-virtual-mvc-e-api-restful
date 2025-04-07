@@ -22,12 +22,12 @@ namespace LojaVirtual.Client.Extensions
             app.UseAuthorization();
 
             app.MapStaticAssets();
-
+            
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Produtos}/{action=Index}/{id?}")
                 .WithStaticAssets();
-            
+
             // Define a cultura pt-BR
             var defaultCulture = new CultureInfo("pt-BR");
             var localizationOptions = new RequestLocalizationOptions

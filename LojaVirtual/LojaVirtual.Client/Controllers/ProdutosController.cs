@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace LojaVirtual.Client
+namespace LojaVirtual.Client.Controllers
 {
-    [Route("produtos")]
     public class ProdutosController : Controller
     {
         private readonly LojaVirtualContext _context;
