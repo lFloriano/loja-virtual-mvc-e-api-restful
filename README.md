@@ -4,7 +4,6 @@
 
 Bem-vindo ao repositório do projeto **Loja Virtual**. Este projeto é uma entrega do MBA DevXpert Full Stack .NET e é referente ao módulo **Introdução ao Desenvolvimento ASP.NET Core**.
 O objetivo principal desenvolver uma aplicação de loja virtual que permite aos usuários criar, editar, visualizar e excluir produtos e categorias, tanto através de uma interface web utilizando MVC quanto através de uma API RESTful.
-Descreva livremente mais detalhes do seu projeto aqui.
 
 ### **Autor(es)**
 - Lucas Floriano
@@ -26,7 +25,7 @@ O projeto consiste em:
   - ASP.NET Core MVC
   - ASP.NET Core Web API
   - Entity Framework Core
-- **Banco de Dados:** SQL Server
+- **Banco de Dados:** SQL Server + SQLite
 - **Autenticação e Autorização:**
   - ASP.NET Core Identity
   - JWT (JSON Web Token) para autenticação na API
@@ -71,7 +70,7 @@ A estrutura do projeto é organizada da seguinte forma:
    - `cd nome-do-repositorio`
 
 2. **Configuração do Banco de Dados:**
-   - No arquivo `appsettings.json`, configure a string de conexão do SQL Server.
+   - No arquivo `appsettings.json`, configure a string de conexão do SQL Server(Não necessário em ambiente de desenvolviment).
    - Rode o projeto para que a configuração do Seed crie o banco e popule com os dados básicos
 
 3. **Executar a Aplicação MVC:**
@@ -82,7 +81,7 @@ A estrutura do projeto é organizada da seguinte forma:
 4. **Executar a API:**
    - `cd LojaVirtual/LojaVirtual.Client.Api/`
    - `dotnet run`
-   - Acesse a documentação da API em: http://localhost:5001/swagger
+   - Acesse a documentação da API em: https://localhost:7019/swagger
 
 ## **7. Instruções de Configuração**
 
@@ -93,7 +92,7 @@ A estrutura do projeto é organizada da seguinte forma:
 
 A documentação da API está disponível através do Swagger. Após iniciar a API, acesse a documentação em:
 
-http://localhost:5001/swagger
+https://localhost:7019/swagger
 
 ## **9. Avaliação**
 
