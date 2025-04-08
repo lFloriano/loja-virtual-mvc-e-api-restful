@@ -11,7 +11,7 @@ namespace LojaVirtual.Core.Data
             Initialize();
         }
 
-        public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Vendedor> Vendedores { get; set; }
         public DbSet<Produto> Produtos { get; set; }
 
@@ -34,7 +34,7 @@ namespace LojaVirtual.Core.Data
 
         private void AdicionarCategoriasIniciais()
         {
-            Categoria.AddRange(
+            Categorias.AddRange(
                 new Categoria { Nome = "Eletrônicos", Descricao = "Equipamentos Eletrônicos" },
                 new Categoria { Nome = "Roupas", Descricao = "Roupas masculinas e femininas" },
                 new Categoria { Nome = "Livros", Descricao = "Livros físicos e e-books" }
@@ -52,8 +52,9 @@ namespace LojaVirtual.Core.Data
         {
             modelBuilder.Entity<Produto>()
                 .HasOne(p => p.Categoria)
-                .WithMany()
-                .HasForeignKey(p => p.CategoriaId);
+                .WithMany(c => c.Produtos)
+                .HasForeignKey(p => p.CategoriaId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Produto>()
                 .HasOne(p => p.Vendedor)

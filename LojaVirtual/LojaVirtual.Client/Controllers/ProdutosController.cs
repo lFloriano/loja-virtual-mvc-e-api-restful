@@ -50,7 +50,7 @@ namespace LojaVirtual.Client.Controllers
         [HttpGet("novo")]
         public IActionResult Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao");
+            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao");
             ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome");
 
             return View();
@@ -62,7 +62,7 @@ namespace LojaVirtual.Client.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao", produto.CategoriaId);
+                ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
                 ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
 
                 return View(produto);
@@ -88,7 +88,7 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao", produto.CategoriaId);
+            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
             ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
 
             return View(produto);
@@ -105,7 +105,7 @@ namespace LojaVirtual.Client.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Descricao", produto.CategoriaId);
+                ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
                 ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
                 return View(produto);
             }
