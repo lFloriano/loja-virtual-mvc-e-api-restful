@@ -398,9 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/LojaVirtual/LojaVirtual.Client/app.db
-/LojaVirtual/LojaVirtual.Client/app.db-shm
-/LojaVirtual/LojaVirtual.Client/app.db-wal
-/LojaVirtual/LojaVirtual.Api/app.db
-/LojaVirtual/LojaVirtual.Api/app.db-shm
-/LojaVirtual/LojaVirtual.Api/app.db-wal
+*.db
+*.db-shm
+*.db-wal

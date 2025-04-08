@@ -14,7 +14,7 @@ namespace LojaVirtual.Client.Extensions
 
             if (builder.Environment.IsDevelopment())
             {
-                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlite("Data Source=app.db"));
+                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlite("Data Source=MvcDb.db"));
                 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(""));
                 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             }

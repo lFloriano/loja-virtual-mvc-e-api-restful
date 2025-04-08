@@ -8,7 +8,7 @@ namespace LojaVirtual.Core.Data
         public LojaVirtualContext(DbContextOptions<LojaVirtualContext> options)
             : base(options)
         {
-            Initialize();
+            new LojaVirtualInitializer(this).Initialize();
         }
 
         public DbSet<Categoria> Categorias { get; set; }
@@ -20,32 +20,6 @@ namespace LojaVirtual.Core.Data
             base.OnModelCreating(modelBuilder);
 
             MapearRelacionamentos(modelBuilder);
-        }
-
-        private void Initialize()
-        {
-            if (Database.EnsureCreated())
-            {
-                AdicionarCategoriasIniciais();
-                AdicionarVendedorInical();
-                SaveChanges();
-            }
-        }
-
-        private void AdicionarCategoriasIniciais()
-        {
-            Categorias.AddRange(
-                new Categoria { Nome = "Eletrônicos", Descricao = "Equipamentos Eletrônicos" },
-                new Categoria { Nome = "Roupas", Descricao = "Roupas masculinas e femininas" },
-                new Categoria { Nome = "Livros", Descricao = "Livros físicos e e-books" }
-            );
-        }
-
-        private void AdicionarVendedorInical()
-        {
-            Vendedores.Add(
-                new Vendedor { Nome = "Vendedor 1", Email = "Vendedor@lojavirtual.com", DataCadastro = DateTime.Now }
-            );
         }
 
         private void MapearRelacionamentos(ModelBuilder modelBuilder)

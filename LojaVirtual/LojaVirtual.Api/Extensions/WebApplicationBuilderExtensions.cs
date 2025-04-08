@@ -11,7 +11,7 @@ namespace LojaVirtual.Api.Extensions
         {
             if (builder.Environment.IsDevelopment())
             {
-                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlite("Data Source=app.db"));
+                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlite("Data Source=ApiDb.db"));
                 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             }
             else
