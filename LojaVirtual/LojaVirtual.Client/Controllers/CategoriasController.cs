@@ -53,6 +53,7 @@ namespace LojaVirtual.Client.Controllers
             {
                 _context.Add(categoria);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -119,6 +120,7 @@ namespace LojaVirtual.Client.Controllers
 
             var categoria = await _context.Categorias
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (categoria == null)
             {
                 return NotFound();
@@ -131,7 +133,17 @@ namespace LojaVirtual.Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var categoria = await _context.Categorias
+                .Include(x => x.Produtos)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (categoria?.Produtos != null && categoria.Produtos.Any())
+            {
+                //TODO: melhorar exibição de mensagens vindas do backend
+                ViewBag.Mensagens = "Não é possível excluir a categoria pois existem produtos vinculados a ela.";
+                return View(categoria);
+            }
+
             if (categoria != null)
             {
                 _context.Categorias.Remove(categoria);

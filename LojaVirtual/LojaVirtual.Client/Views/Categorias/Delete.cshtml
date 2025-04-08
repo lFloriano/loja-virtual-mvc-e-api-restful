@@ -4,6 +4,11 @@
     ViewData["Title"] = "Excluir Categoria";
 }
 
+@if (ViewBag.Mensagens != null)
+{
+    <div class="alert alert-danger">@ViewBag.Mensagens</div>
+}
+
 <h1>Categoria</h1>
 
 <hr />

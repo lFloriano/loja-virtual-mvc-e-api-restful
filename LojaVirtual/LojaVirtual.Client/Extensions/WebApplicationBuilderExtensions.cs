@@ -12,10 +12,17 @@ namespace LojaVirtual.Client.Extensions
             var lojaVirtualConnection = builder.Configuration.GetConnectionString("LojaVirtualConnection") ?? throw new InvalidOperationException("Connection string 'LojaVirtualConnection' not found.");
             var identityConnection = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection string 'IdentityConnection' not found.");
 
-            builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(lojaVirtualConnection));
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(identityConnection));
-
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlite("Data Source=app.db"));
+                builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(""));
+                builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            }
+            else
+            {
+                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(lojaVirtualConnection));
+                builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(identityConnection));
+            }
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
