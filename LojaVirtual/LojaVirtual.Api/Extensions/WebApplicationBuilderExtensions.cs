@@ -1,7 +1,6 @@
 ﻿using LojaVirtual.Core.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
 namespace LojaVirtual.Api.Extensions
@@ -10,9 +9,16 @@ namespace LojaVirtual.Api.Extensions
     {
         public static void AddServices(this WebApplicationBuilder builder)
         {
-            var lojaVirtualConnection = builder.Configuration.GetConnectionString("LojaVirtualConnection") ?? throw new InvalidOperationException("Connection string 'LojaVirtualConnection' not found.");
-
-            builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(lojaVirtualConnection));
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlite("Data Source=app.db"));
+                builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            }
+            else
+            {
+                var lojaVirtualConnection = builder.Configuration.GetConnectionString("LojaVirtualConnection") ?? throw new InvalidOperationException("Connection string 'LojaVirtualConnection' not found.");
+                builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(lojaVirtualConnection));
+            }
 
             builder.Services.AddControllers()
                 .AddJsonOptions(opt =>
