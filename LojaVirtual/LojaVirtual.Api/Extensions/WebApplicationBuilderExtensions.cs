@@ -1,4 +1,5 @@
 ﻿using LojaVirtual.Core.Data;
+using LojaVirtual.Core.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -32,6 +33,9 @@ namespace LojaVirtual.Api.Extensions
             builder.Services.AddOpenApi();
             builder.AddTraducaoDeModelValidation();
 
+            builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            builder.Services.AddScoped<IVendedorRepository, VendedorRepository>();
         }
 
         private static void AddTraducaoDeModelValidation(this WebApplicationBuilder builder)

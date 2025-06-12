@@ -1,7 +1,6 @@
 ﻿using LojaVirtual.Core.Application.Models;
-using LojaVirtual.Core.Data;
+using LojaVirtual.Core.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LojaVirtual.Api.Controllers
 {
@@ -9,19 +8,19 @@ namespace LojaVirtual.Api.Controllers
     [Route("api/produtos")]
     public class ProdutoController : ControllerBase
     {
-        readonly LojaVirtualContext _context;
+        readonly IProdutoRepository _produtoRepository;
 
-        public ProdutoController(LojaVirtualContext context)
+        public ProdutoController(IProdutoRepository produtoRepository)
         {
-            _context = context;
+            _produtoRepository = produtoRepository;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Produto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var produtos = _context.Produtos.AsNoTracking().ToList();
+            var produtos = await _produtoRepository.ObterTodosAsync();
 
             if (produtos == null || !produtos.Any())
             {
@@ -34,12 +33,9 @@ namespace LojaVirtual.Api.Controllers
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(Produto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var produto = _context.Produtos
-                .Include(p => p.Categoria)
-                .AsNoTracking()
-                .FirstOrDefault(p => p.Id == id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id);
 
             if (produto == null)
             {
@@ -52,11 +48,9 @@ namespace LojaVirtual.Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(Produto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody] Produto produto)
+        public async Task<IActionResult> Post([FromBody] Produto produto)
         {
-            _context.Produtos.Add(produto);
-            _context.SaveChanges();
-
+            await _produtoRepository.AdicionarAsync(produto);
             return CreatedAtAction(nameof(Get), new { id = produto.Id }, produto);
         }
 
@@ -64,41 +58,37 @@ namespace LojaVirtual.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put(int id, [FromBody] Produto produtoEditado)
+        public async Task<IActionResult> Put(int id, [FromBody] Produto produtoEditado)
         {
             if (id != produtoEditado.Id)
             {
                 return BadRequest();
             }
 
-            var produtoOriginal = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.Id == id);
+            var produtoOriginal = await _produtoRepository.ObterPorIdAsync(id);
 
             if (produtoOriginal == null)
             {
                 return NotFound();
             }
 
-            _context.Produtos.Update(produtoEditado);
-            _context.SaveChanges();
-
+            await _produtoRepository.AtualizarAsync(produtoEditado);
             return NoContent();
         }
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var produto = _context.Produtos.FirstOrDefault(p => p.Id == id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id);
 
             if (produto == null)
             {
                 return NotFound();
             }
 
-            _context.Produtos.Remove(produto);
-            _context.SaveChanges();
-
+            await _produtoRepository.RemoverAsync(id);
             return NoContent();
         }
     }
