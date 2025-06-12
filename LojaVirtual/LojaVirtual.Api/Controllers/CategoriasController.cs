@@ -1,7 +1,6 @@
 ﻿using LojaVirtual.Core.Application.Models;
-using LojaVirtual.Core.Data;
+using LojaVirtual.Core.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LojaVirtual.Api.Controllers
 {
@@ -9,19 +8,19 @@ namespace LojaVirtual.Api.Controllers
     [Route("api/categorias")]
     public class CategoriasController : ControllerBase
     {
-        readonly LojaVirtualContext _context;
+        readonly ICategoriaRepository _categoriaRepository;
 
-        public CategoriasController(LojaVirtualContext context)
+        public CategoriasController(ICategoriaRepository categoriaRepository)
         {
-            _context = context;
+            _categoriaRepository = categoriaRepository;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Categoria>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var categorias = _context.Categorias.AsNoTracking().ToList();
+            var categorias = await _categoriaRepository.ObterTodosAsync();
 
             if (categorias == null || !categorias.Any())
             {
@@ -34,9 +33,9 @@ namespace LojaVirtual.Api.Controllers
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(Categoria), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var categoria = _context.Categorias.Include(x => x.Produtos).AsNoTracking().FirstOrDefault(x => x.Id == id);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id);
 
             if (categoria == null)
             {
@@ -49,11 +48,9 @@ namespace LojaVirtual.Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(Categoria), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody] Categoria categoria)
+        public async Task<IActionResult> Post([FromBody] Categoria categoria)
         {
-            _context.Categorias.Add(categoria);
-            _context.SaveChanges();
-
+            await _categoriaRepository.AdicionarAsync(categoria);
             return CreatedAtAction(nameof(Get), new { id = categoria.Id }, categoria);
         }
 
@@ -61,23 +58,21 @@ namespace LojaVirtual.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put(int id, [FromBody] Categoria categoriaEditada)
+        public async Task<IActionResult> Put(int id, [FromBody] Categoria categoriaEditada)
         {
             if (id != categoriaEditada.Id)
             {
                 return BadRequest();
             }
 
-            var categoriaOriginal = _context.Categorias.AsNoTracking().FirstOrDefault(x => x.Id == id);
+            var categoriaOriginal = await _categoriaRepository.ObterPorIdAsync(id);
 
             if (categoriaOriginal == null)
             {
                 return NotFound();
             }
 
-            _context.Categorias.Update(categoriaEditada);
-            _context.SaveChanges();
-
+            await _categoriaRepository.AtualizarAsync(categoriaEditada);
             return NoContent();
         }
 
@@ -85,11 +80,9 @@ namespace LojaVirtual.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var categoria = _context.Categorias
-                .Include(x => x.Produtos)
-                .FirstOrDefault(x => x.Id == id);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id);
 
             if (categoria == null)
             {
@@ -101,9 +94,7 @@ namespace LojaVirtual.Api.Controllers
                 return (BadRequest("Não é possível excluir a categoria, pois ela possui produtos associados."));
             }
 
-            _context.Categorias.Remove(categoria);
-            _context.SaveChanges();
-
+            await _categoriaRepository.RemoverAsync(id);
             return NoContent();
         }
     }
