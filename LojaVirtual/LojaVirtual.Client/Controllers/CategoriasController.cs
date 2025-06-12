@@ -1,5 +1,6 @@
 ﻿using LojaVirtual.Core.Application.Models;
 using LojaVirtual.Core.Data;
+using LojaVirtual.Core.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,17 +9,17 @@ namespace LojaVirtual.Client.Controllers
     [Route("categorias")]
     public class CategoriasController : Controller
     {
-        private readonly LojaVirtualContext _context;
+        readonly ICategoriaRepository _categoriaRepository;
 
-        public CategoriasController(LojaVirtualContext context)
+        public CategoriasController(ICategoriaRepository categoriaRepository)
         {
-            _context = context;
+            _categoriaRepository = categoriaRepository;
         }
 
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categorias.ToListAsync());
+            return View(await _categoriaRepository.ObterTodosAsync());
         }
 
         [HttpGet("detalhes/{id:int}")]
@@ -29,7 +30,7 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.Id == id);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id.Value);
 
             if (categoria == null)
             {
@@ -51,9 +52,7 @@ namespace LojaVirtual.Client.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(categoria);
-                await _context.SaveChangesAsync();
-
+                await _categoriaRepository.AdicionarAsync(categoria);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -68,7 +67,7 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias.FindAsync(id);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id.Value);
 
             if (categoria == null)
             {
@@ -91,12 +90,12 @@ namespace LojaVirtual.Client.Controllers
             {
                 try
                 {
-                    _context.Update(categoria);
-                    await _context.SaveChangesAsync();
+                    await _categoriaRepository.AtualizarAsync(categoria);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoriaExists(categoria.Id))
+
+                    if (!(await _categoriaRepository.ExisteAsync(categoria.Id)))
                     {
                         return NotFound();
                     }
@@ -118,8 +117,7 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id.Value);
 
             if (categoria == null)
             {
@@ -133,9 +131,7 @@ namespace LojaVirtual.Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categorias
-                .Include(x => x.Produtos)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var categoria = await _categoriaRepository.ObterPorIdAsync(id);
 
             if (categoria?.Produtos != null && categoria.Produtos.Any())
             {
@@ -146,16 +142,10 @@ namespace LojaVirtual.Client.Controllers
 
             if (categoria != null)
             {
-                _context.Categorias.Remove(categoria);
+                await _categoriaRepository.RemoverAsync(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoriaExists(int id)
-        {
-            return _context.Categorias.Any(e => e.Id == id);
         }
     }
 }
