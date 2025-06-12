@@ -1,5 +1,6 @@
 using LojaVirtual.Client.Data;
 using LojaVirtual.Core.Data;
+using LojaVirtual.Core.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,10 @@ namespace LojaVirtual.Client.Extensions
                 builder.Services.AddDbContext<LojaVirtualContext>(options => options.UseSqlServer(lojaVirtualConnection));
                 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(identityConnection));
             }
+
+            builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+            builder.Services.AddScoped<IVendedorRepository, VendedorRepository>();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

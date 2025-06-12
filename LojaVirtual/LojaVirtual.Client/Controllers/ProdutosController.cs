@@ -1,5 +1,5 @@
 ﻿using LojaVirtual.Core.Application.Models;
-using LojaVirtual.Core.Data;
+using LojaVirtual.Core.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,22 +8,22 @@ namespace LojaVirtual.Client.Controllers
 {
     public class ProdutosController : Controller
     {
-        private readonly LojaVirtualContext _context;
+        readonly IProdutoRepository _produtoRepository;
+        readonly ICategoriaRepository _categoriaRepository;
+        readonly IVendedorRepository _vendedorRepository;
 
-        public ProdutosController(LojaVirtualContext context)
+        public ProdutosController(IProdutoRepository produtoRepository, ICategoriaRepository categoriaRepository, IVendedorRepository vendedorRepository)
         {
-            _context = context;
+            _produtoRepository = produtoRepository;
+            _categoriaRepository = categoriaRepository;
+            _vendedorRepository = vendedorRepository;
         }
 
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var produtos = _context.Produtos
-                .Include(p => p.Categoria)
-                .Include(p => p.Vendedor)
-                .ToListAsync();
-
-            return View(await produtos);
+            var produtos = await _produtoRepository.ObterTodosAsync();
+            return View(produtos);
         }
 
         [HttpGet("detalhes/{id:int}")]
@@ -34,10 +34,7 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            var produto = await _context.Produtos
-                .Include(p => p.Categoria)
-                .Include(p => p.Vendedor)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id.Value);
 
             if (produto == null)
             {
@@ -48,11 +45,9 @@ namespace LojaVirtual.Client.Controllers
         }
 
         [HttpGet("novo")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao");
-            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome");
-
+            await CarregarDropDownLists();
             return View();
         }
 
@@ -62,14 +57,11 @@ namespace LojaVirtual.Client.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
-                ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
-
+                await CarregarDropDownLists();
                 return View(produto);
             }
 
-            _context.Add(produto);
-            await _context.SaveChangesAsync();
+            await _produtoRepository.AdicionarAsync(produto);
             return RedirectToAction(nameof(Index));
         }
 
@@ -81,16 +73,14 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id.Value);
 
             if (produto == null)
             {
                 return NotFound();
             }
 
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
-            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
-
+            await CarregarDropDownLists();
             return View(produto);
         }
 
@@ -105,19 +95,17 @@ namespace LojaVirtual.Client.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao", produto.CategoriaId);
-                ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "Nome", produto.VendedorId);
+                await CarregarDropDownLists();
                 return View(produto);
             }
 
             try
             {
-                _context.Update(produto);
-                await _context.SaveChangesAsync();
+                await _produtoRepository.AtualizarAsync(produto);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProdutoExists(produto.Id))
+                if (!(await _produtoRepository.ExisteAsync(id)))
                 {
                     return NotFound();
                 }
@@ -138,10 +126,7 @@ namespace LojaVirtual.Client.Controllers
                 return NotFound();
             }
 
-            var produto = await _context.Produtos
-                .Include(p => p.Categoria)
-                .Include(p => p.Vendedor)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id.Value);
 
             if (produto == null)
             {
@@ -155,20 +140,25 @@ namespace LojaVirtual.Client.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var produto = await _context.Produtos.FindAsync(id);
+            var produto = await _produtoRepository.ObterPorIdAsync(id);
 
             if (produto != null)
             {
-                _context.Produtos.Remove(produto);
+                await _produtoRepository.RemoverAsync(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProdutoExists(int id)
+        private async Task CarregarDropDownLists(int? idCategoriaSelecionada = null, int? idVendedorSelecionado = null)
         {
-            return _context.Produtos.Any(e => e.Id == id);
+            ViewData["CategoriaId"] = idCategoriaSelecionada.HasValue ?
+                new SelectList(await _categoriaRepository.ObterTodosAsync(), "Id", "Descricao", idCategoriaSelecionada) :
+                new SelectList(await _categoriaRepository.ObterTodosAsync(), "Id", "Descricao");
+
+            ViewData["VendedorId"] = idVendedorSelecionado.HasValue ?
+                new SelectList(await _vendedorRepository.ObterTodosAsync(), "Id", "Nome", idVendedorSelecionado) :
+                new SelectList(await _vendedorRepository.ObterTodosAsync(), "Id", "Nome");
         }
     }
 }
